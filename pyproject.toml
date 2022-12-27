@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pywal"
+description = "Generate and change color-schemes on the fly"
+version = "3.3.3"
+readme = "README.md"
+requires-python = ">=3.5"
+license = {text = "MIT"}
+keywords = ["wal", "colorscheme", "changing-colorschemes", "material"]
+classifiers = [
+        "Environment :: X11 Applications",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+]
