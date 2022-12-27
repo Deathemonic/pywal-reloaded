@@ -3,11 +3,8 @@
 
 <p align="center">
 <a href="https://travis-ci.org/dylanaraps/pywal"><img src="https://travis-ci.org/dylanaraps/pywal.svg?branch=master"></a>
-<a href="./LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-<a href="https://pypi.python.org/pypi/pywal/"><img src="https://img.shields.io/pypi/v/pywal.svg"></a>
-<a href="https://www.patreon.com/dyla"><img src="https://img.shields.io/badge/donate-patreon-yellow.svg"></a>
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7QNJNKS3WYVS"><img src="https://img.shields.io/badge/donate-paypal-green.svg"></a>
-</p>
+<a href="./LICENSE.md"><img src="https://img.shields.io/github/license/Deathemonic/pywal-reloaded?color=6eb5ff&logo=github&style=for-the-badge"></a>
+<a href="https://pypi.python.org/pypi/pywal/"><img src="https://img.shields.io/pypi/v/pywal?color=4584b6&logo=pypi&style=for-the-badge"></a>
 
 <img src="https://i.imgur.com/HhK3LDv.jpg" alt="img" align="right" width="400px">
 
@@ -21,4 +18,15 @@ The goal of Pywal was to be as out of the way as possible. It doesn't modify any
 
 Terminal emulators and TTYs have their color-schemes updated in real-time with no delay. With minimal configuration this functionality can be extended to almost anything running on your system.
 
-### More: \[[Installation](https://github.com/dylanaraps/pywal/wiki/Installation)] \[[Getting Started](https://github.com/dylanaraps/pywal/wiki/Getting-Started)] \[[Customization](https://github.com/dylanaraps/pywal/wiki/Customization)] \[[Wiki](https://github.com/dylanaraps/pywal/wiki)] \[[Screenshots](https://www.reddit.com/r/unixporn/search?q=wal&restrict_sr=on&sort=relevance&t=all)]
+### More: 
+* [Installation](https://github.com/dylanaraps/pywal/wiki/Installation)
+* [Getting Started](https://github.com/dylanaraps/pywal/wiki/Getting-Started)
+* [Customization](https://github.com/dylanaraps/pywal/wiki/Customization)
+* [Wiki](https://github.com/dylanaraps/pywal/wiki)
+* [Screenshots](https://www.reddit.com/r/unixporn/search?q=wal&restrict_sr=on&sort=relevance&t=all)
+
+
+### Support the Original Developer:
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Ddyla%26type%3Dpledges&style=for-the-badge)](https://patreon.com/dyla)
+
+[![Support me on PayPal](https://img.shields.io/badge/Donate-Paypal-3b7bbf?style=for-the-badge&logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7QNJNKS3WYVS)
