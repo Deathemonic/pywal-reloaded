@@ -40,8 +40,10 @@ def create_sequences(colors, vte_fix=False):
     alpha = colors["alpha"]
 
     # Colors 0-15.
-    sequences = [set_color(index, colors["colors"]["color%s" % index])
-                 for index in range(16)]
+    sequences = [
+        set_color(index, colors["colors"][f"color{index}"])
+        for index in range(16)
+    ]
 
     # Special colors.
     # Source: https://goo.gl/KcoQgP
@@ -72,12 +74,7 @@ def create_sequences(colors, vte_fix=False):
 
 def send(colors, cache_dir=CACHE_DIR, to_send=True, vte_fix=False):
     """Send colors to all open terminals."""
-    if OS == "Darwin":
-        tty_pattern = "/dev/ttys00[0-9]*"
-
-    else:
-        tty_pattern = "/dev/pts/[0-9]*"
-
+    tty_pattern = "/dev/ttys00[0-9]*" if OS == "Darwin" else "/dev/pts/[0-9]*"
     sequences = create_sequences(colors, vte_fix)
 
     # Writing to "/dev/pts/[0-9] lets you send data to open terminals.

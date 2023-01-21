@@ -27,16 +27,31 @@ def list_out():
 
     if user_themes:
         print("\033[1;32mUser Themes\033[0m:")
-        print(" -", "\n - ".join(t + " (last used)" if t == last_used_theme
-                                 else t for t in sorted(user_themes)))
+        print(
+            " -",
+            "\n - ".join(
+                f"{t} (last used)" if t == last_used_theme else t
+                for t in sorted(user_themes)
+            ),
+        )
 
     print("\033[1;32mDark Themes\033[0m:")
-    print(" -", "\n - ".join(t + " (last used)" if t == last_used_theme else t
-                             for t in sorted(dark_themes)))
+    print(
+        " -",
+        "\n - ".join(
+            f"{t} (last used)" if t == last_used_theme else t
+            for t in sorted(dark_themes)
+        ),
+    )
 
     print("\033[1;32mLight Themes\033[0m:")
-    print(" -", "\n - ".join(t + " (last used)" if t == last_used_theme else t
-                             for t in sorted(ligh_themes)))
+    print(
+        " -",
+        "\n - ".join(
+            f"{t} (last used)" if t == last_used_theme else t
+            for t in sorted(ligh_themes)
+        ),
+    )
 
     print("\033[1;32mExtra\033[0m:")
     print(" - random (select a random dark theme)")
@@ -69,7 +84,7 @@ def terminal_sexy_to_wal(data):
     }
 
     for i, color in enumerate(data["color"]):
-        data["colors"]["color%s" % i] = color
+        data["colors"][f"color{i}"] = color
 
     return data
 
@@ -148,7 +163,7 @@ def file(input_file, light=False):
 
 def save(colors, theme_name, light=False):
     """Save colors to a theme file."""
-    theme_file = theme_name + ".json"
+    theme_file = f"{theme_name}.json"
     theme_path = os.path.join(CONF_DIR, "colorschemes",
                               "light" if light else "dark", theme_file)
     util.save_file_json(colors, theme_path)

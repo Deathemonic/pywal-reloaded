@@ -34,10 +34,7 @@ def get_desktop_env():
         return "SWAY"
 
     desktop = os.environ.get("DESKTOP_STARTUP_ID")
-    if desktop and "awesome" in desktop:
-        return "AWESOME"
-
-    return None
+    return "AWESOME" if desktop and "awesome" in desktop else None
 
 
 def xfconf(img):
@@ -96,14 +93,26 @@ def set_desktop_wallpaper(desktop, img):
         xfconf(img)
 
     elif "muffin" in desktop or "cinnamon" in desktop:
-        util.disown(["gsettings", "set",
-                     "org.cinnamon.desktop.background",
-                     "picture-uri", "file://" + urllib.parse.quote(img)])
+        util.disown(
+            [
+                "gsettings",
+                "set",
+                "org.cinnamon.desktop.background",
+                "picture-uri",
+                f"file://{urllib.parse.quote(img)}",
+            ]
+        )
 
     elif "gnome" in desktop or "unity" in desktop:
-        util.disown(["gsettings", "set",
-                     "org.gnome.desktop.background",
-                     "picture-uri", "file://" + urllib.parse.quote(img)])
+        util.disown(
+            [
+                "gsettings",
+                "set",
+                "org.gnome.desktop.background",
+                "picture-uri",
+                f"file://{urllib.parse.quote(img)}",
+            ]
+        )
 
     elif "mate" in desktop:
         util.disown(["gsettings", "set", "org.mate.background",
@@ -156,7 +165,7 @@ def set_mac_wallpaper(img):
     for pic in pictures:
         if pic:
             sql += 'insert into preferences (key, data_id, picture_id) '
-            sql += 'values(1, %s, %s); ' % (new_entry, pic)
+            sql += f'values(1, {new_entry}, {pic}); '
 
     subprocess.call(["sqlite3", db_path, sql])
 

@@ -40,17 +40,14 @@ def template(colors, input_file, output_file=None):
 
                 # If the function is callable, call it
                 if callable(function):
-                    if len(func) > 1:
-                        new_color = function(*func[1].split(","))
-                    else:
-                        new_color = function()
+                    new_color = function(*func[1].split(",")) if len(func) > 1 else function()
                     # string to replace generated colors
                     if func[0] != '.':
                         replace_str += "."
                     replace_str += "(".join(func) + ")"
                 else:
                     # if it is an attribute i.e. rgb
-                    replace_str += '.' + fname
+                    replace_str += f'.{fname}'
                     new_color = function
 
             if isinstance(new_color, util.Color):
@@ -61,9 +58,8 @@ def template(colors, input_file, output_file=None):
                 new_color_clean = (new_color.replace('[', '_')
                                             .replace(']', '_')
                                             .replace('.', '_'))
-                template_data[i] = l.replace(replace_str,
-                                             "color" + new_color_clean)
-                colors["color" + new_color_clean] = new_color
+                template_data[i] = l.replace(replace_str, f"color{new_color_clean}")
+                colors[f"color{new_color_clean}"] = new_color
     try:
         template_data = "".join(template_data).format(**colors)
     except (ValueError, KeyError, AttributeError) as exc:

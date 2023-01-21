@@ -20,12 +20,7 @@ def list_backends():
 
 def normalize_img_path(img: str):
     """Normalizes the image path for output."""
-    if os.name == 'nt':
-        # On Windows, the JSON.dump ends up outputting un-escaped backslash breaking
-        # the ability to read colors.json. Windows supports forward slash, so we can
-        # use that for now
-        return img.replace('\\', '/')
-    return img
+    return img.replace('\\', '/') if os.name == 'nt' else img
 
 def colors_to_dict(colors, img):
     """Convert list of colors to pywal format."""
@@ -70,13 +65,11 @@ def generic_adjust(colors, light):
         colors[0] = util.lighten_color(colors[0], 0.95)
         colors[7] = util.darken_color(colors[0], 0.75)
         colors[8] = util.darken_color(colors[0], 0.25)
-        colors[15] = colors[7]
-
     else:
         colors[0] = util.darken_color(colors[0], 0.80)
         colors[7] = util.lighten_color(colors[0], 0.75)
         colors[8] = util.lighten_color(colors[0], 0.25)
-        colors[15] = colors[7]
+    colors[15] = colors[7]
 
     return colors
 
@@ -114,12 +107,12 @@ def get_backend(backend):
 
 def palette():
     """Generate a palette from the colors."""
-    for i in range(0, 16):
+    for i in range(16):
         if i % 8 == 0:
             print()
 
         if i > 7:
-            i = "8;5;%s" % i
+            i = f"8;5;{i}"
 
         print("\033[4%sm%s\033[0m" % (i, " " * (80 // 20)), end="")
 
@@ -144,13 +137,13 @@ def get(img, light=False, backend="wal", cache_dir=CACHE_DIR, sat=""):
         # Dynamically import the backend we want to use.
         # This keeps the dependencies "optional".
         try:
-            __import__("pywal.backends.%s" % backend)
+            __import__(f"pywal.backends.{backend}")
         except ImportError:
             __import__("pywal.backends.wal")
             backend = "wal"
 
         logging.info("Using %s backend.", backend)
-        backend = sys.modules["pywal.backends.%s" % backend]
+        backend = sys.modules[f"pywal.backends.{backend}"]
         colors = getattr(backend, "get")(img, light)
         colors = colors_to_dict(saturate_colors(colors, sat), img)
 

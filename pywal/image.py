@@ -56,7 +56,7 @@ def get_random_image(img_dir, recursive):
         sys.exit(1)
 
     random.shuffle(images)
-    return os.path.join(img_dir if not recursive else "", images[0])
+    return os.path.join("" if recursive else img_dir, images[0])
 
 
 def get_next_image(img_dir, recursive):
@@ -81,7 +81,7 @@ def get_next_image(img_dir, recursive):
     except IndexError:
         image = images[0]
 
-    return os.path.join(img_dir if not recursive else "", image)
+    return os.path.join("" if recursive else img_dir, image)
 
 
 def get(img, cache_dir=CACHE_DIR, iterative=False, recursive=False):

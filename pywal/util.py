@@ -41,7 +41,7 @@ class Color:
     @property
     def alpha(self):
         """Add URxvt alpha value to color."""
-        return "[%s]%s" % (self.alpha_num, self.hex_color)
+        return f"[{self.alpha_num}]{self.hex_color}"
 
     @property
     def alpha_dec(self):
@@ -51,7 +51,7 @@ class Color:
     @property
     def decimal(self):
         """Export color in decimal."""
-        return "%s%s" % ("#", int(self.hex_color[1:], 16))
+        return f"#{int(self.hex_color[1:], 16)}"
 
     @property
     def decimal_strip(self):
@@ -61,7 +61,7 @@ class Color:
     @property
     def octal(self):
         """Export color in octal."""
-        return "%s%s" % ("#", oct(int(self.hex_color[1:], 16))[2:])
+        return f"#{oct(int(self.hex_color[1:], 16))[2:]}"
 
     @property
     def octal_strip(self):
