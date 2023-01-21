@@ -5,9 +5,10 @@
 <a href="./LICENSE.md"><img src="https://img.shields.io/github/license/Deathemonic/pywal-reloaded?color=6eb5ff&logo=github&style=for-the-badge"></a>
 <a href="https://pypi.python.org/pypi/pywal/"><img src="https://img.shields.io/pypi/v/pywal?color=4584b6&logo=pypi&style=for-the-badge"></a>
 
+Pywal is a tool that generates a color palette from the dominant colors in an image. It then applies the colors system-wide and on-the-fly in all of your favourite programs.
+  
 <img src="https://i.imgur.com/HhK3LDv.jpg" alt="img" align="right" width="300px">
 
-Pywal is a tool that generates a color palette from the dominant colors in an image. It then applies the colors system-wide and on-the-fly in all of your favourite programs.  
 There are currently 5 supported color generation backends, each providing a different palette of colors from each image. You're bound to find an appealing color-scheme.
 
 Pywal also supports predefined themes and has over 250 themes built-in. You can also create your own theme files to share with others.
