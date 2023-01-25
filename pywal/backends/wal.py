@@ -7,7 +7,7 @@ import shutil
 import subprocess
 import sys
 
-from .. import util
+from .. import utils
 
 
 def imagemagick(color_count, img, magick_command):
@@ -62,21 +62,21 @@ def adjust(colors, light):
     # Manually adjust colors.
     if light:
         for color in raw_colors:
-            color = util.saturate_color(color, 0.5)
+            color = utils.saturate_color(color, 0.5)
 
-        raw_colors[0] = util.lighten_color(colors[-1], 0.85)
+        raw_colors[0] = utils.lighten_color(colors[-1], 0.85)
         raw_colors[7] = colors[0]
-        raw_colors[8] = util.darken_color(colors[-1], 0.4)
+        raw_colors[8] = utils.darken_color(colors[-1], 0.4)
         raw_colors[15] = colors[0]
 
     else:
         # Darken the background color slightly.
         if raw_colors[0][1] != "0":
-            raw_colors[0] = util.darken_color(raw_colors[0], 0.40)
+            raw_colors[0] = utils.darken_color(raw_colors[0], 0.40)
 
-        raw_colors[7] = util.blend_color(raw_colors[7], "#EEEEEE")
-        raw_colors[8] = util.darken_color(raw_colors[7], 0.30)
-        raw_colors[15] = util.blend_color(raw_colors[15], "#EEEEEE")
+        raw_colors[7] = utils.blend_color(raw_colors[7], "#EEEEEE")
+        raw_colors[8] = utils.darken_color(raw_colors[7], 0.30)
+        raw_colors[15] = utils.blend_color(raw_colors[15], "#EEEEEE")
 
     return raw_colors
 

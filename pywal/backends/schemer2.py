@@ -7,7 +7,7 @@ import subprocess
 import sys
 
 from .. import colors
-from .. import util
+from .. import utils
 
 
 def gen_colors(img):

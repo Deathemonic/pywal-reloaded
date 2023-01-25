@@ -5,7 +5,7 @@ import shutil
 import os
 
 from pywal import export
-from pywal import util
+from pywal import utils
 
 
 COLORS = util.read_file_json("tests/test_files/test_file.json")

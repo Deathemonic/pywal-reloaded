@@ -8,7 +8,7 @@ import re
 import sys
 
 from . import theme
-from . import util
+from . import utils
 from .settings import CACHE_DIR, MODULE_DIR, __cache_version__
 
 
@@ -18,15 +18,17 @@ def list_backends():
             os.scandir(os.path.join(MODULE_DIR, "backends"))
             if "__" not in b.name]
 
+
 def normalize_img_path(img: str):
     """Normalizes the image path for output."""
     return img.replace('\\', '/') if os.name == 'nt' else img
+
 
 def colors_to_dict(colors, img):
     """Convert list of colors to pywal format."""
     return {
         "wallpaper": normalize_img_path(img),
-        "alpha": util.Color.alpha_num,
+        "alpha": utils.Color.alpha_num,
 
         "special": {
             "background": colors[0],
@@ -56,19 +58,19 @@ def colors_to_dict(colors, img):
 
 
 def generic_adjust(colors, light):
-    """Generic color adjustment for themers."""
+    """Generic color adjustment for themes."""
     if light:
         for color in colors:
-            color = util.saturate_color(color, 0.60)
-            color = util.darken_color(color, 0.5)
+            color = utils.saturate_color(color, 0.60)
+            color = utils.darken_color(color, 0.5)
 
-        colors[0] = util.lighten_color(colors[0], 0.95)
-        colors[7] = util.darken_color(colors[0], 0.75)
-        colors[8] = util.darken_color(colors[0], 0.25)
+        colors[0] = utils.lighten_color(colors[0], 0.95)
+        colors[7] = utils.darken_color(colors[0], 0.75)
+        colors[8] = utils.darken_color(colors[0], 0.25)
     else:
-        colors[0] = util.darken_color(colors[0], 0.80)
-        colors[7] = util.lighten_color(colors[0], 0.75)
-        colors[8] = util.lighten_color(colors[0], 0.25)
+        colors[0] = utils.darken_color(colors[0], 0.80)
+        colors[7] = utils.lighten_color(colors[0], 0.75)
+        colors[8] = utils.lighten_color(colors[0], 0.25)
     colors[15] = colors[7]
 
     return colors
@@ -79,12 +81,12 @@ def saturate_colors(colors, amount):
     if amount and float(amount) <= 1.0:
         for i, _ in enumerate(colors):
             if i not in [0, 7, 8, 15]:
-                colors[i] = util.saturate_color(colors[i], float(amount))
+                colors[i] = utils.saturate_color(colors[i], float(amount))
 
     return colors
 
 
-def cache_fname(img, backend, light, cache_dir, sat=""):
+def cache_frame(img, backend, light, cache_dir, sat=""):
     """Create the cache file name."""
     color_type = "light" if light else "dark"
     file_name = re.sub("[/|\\|.]", "_", img)
@@ -122,12 +124,12 @@ def palette():
 def get(img, light=False, backend="wal", cache_dir=CACHE_DIR, sat=""):
     """Generate a palette."""
     # home_dylan_img_jpg_backend_1.2.2.json
-    cache_name = cache_fname(img, backend, light, cache_dir, sat)
+    cache_name = cache_frame(img, backend, light, cache_dir, sat)
     cache_file = os.path.join(*cache_name)
 
     if os.path.isfile(cache_file):
         colors = theme.file(cache_file)
-        colors["alpha"] = util.Color.alpha_num
+        colors["alpha"] = utils.Color.alpha_num
         logging.info("Found cached colorscheme.")
 
     else:
@@ -147,7 +149,7 @@ def get(img, light=False, backend="wal", cache_dir=CACHE_DIR, sat=""):
         colors = getattr(backend, "get")(img, light)
         colors = colors_to_dict(saturate_colors(colors, sat), img)
 
-        util.save_file_json(colors, cache_file)
+        utils.save_file_json(colors, cache_file)
         logging.info("Generation complete.")
 
     return colors
