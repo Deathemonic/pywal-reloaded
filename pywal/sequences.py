@@ -6,7 +6,7 @@ import logging
 import os
 
 from .settings import CACHE_DIR, OS
-from . import util
+from . import utils
 
 
 def set_special(index, color, iterm_name="h", alpha=100):
@@ -32,7 +32,7 @@ def set_iterm_tab_color(color):
     """Set iTerm2 tab/window color"""
     return ("\033]6;1;bg;red;brightness;%s\a"
             "\033]6;1;bg;green;brightness;%s\a"
-            "\033]6;1;bg;blue;brightness;%s\a") % (*util.hex_to_rgb(color),)
+            "\033]6;1;bg;blue;brightness;%s\a") % (*utils.hex_to_rgb(color),)
 
 
 def create_sequences(colors, vte_fix=False):
@@ -80,7 +80,7 @@ def send(colors, cache_dir=CACHE_DIR, to_send=True, vte_fix=False):
     # Writing to "/dev/pts/[0-9] lets you send data to open terminals.
     if to_send:
         for term in glob.glob(tty_pattern):
-            util.save_file(sequences, term)
+            utils.save_file(sequences, term)
 
-    util.save_file(sequences, os.path.join(cache_dir, "sequences"))
+    utils.save_file(sequences, os.path.join(cache_dir, "sequences"))
     logging.info("Set terminal colors.")

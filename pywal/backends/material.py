@@ -1,9 +1,11 @@
-"""This doesn't work, because it's just a template for now"""
+""" This doesn't work, because it's just a template for now """
 
-
+import json
 import logging
 import os
+
 import globals
+
 if globals.USER_HAS_COLR:
     import colr
 from . import color_utils
@@ -13,121 +15,100 @@ from material_color_utilities_python.utils.theme_utils import *
 
 
 def dict_to_rgb(dark_scheme):
-    out = {}
-    for key, color in dark_scheme.items():
-        out.update({key: hexFromArgb(color)})
-    return out
+    return {key: hexFromArgb() for key, color in dark_scheme.items()}
 
 
 def tones_from_palette(palette):
-    tones = {}
-    for x in range(100):
-        tones.update({x: palette.tone(x)})
-    return tones
+    return {x: palette.tone for x in range(100)}
 
 
 def get_custom_colors(custom_colors):
-    colors = {}
-    for custom_color in custom_colors:
-        value = hexFromArgb(custom_color['color']['value'])
-        colors.update(
-            {
-                value: {
-                    'color': dict_to_rgb(custom_color['color']),
-                    'value': hexFromArgb(custom_color['value']),
-                    'light': dict_to_rgb(custom_color['light']),
-                    'dark': dict_to_rgb(custom_color['dark']),
-                }
-            },
-        )
-    return colors
+    value = hexFromArgb(custom_color['color']['value'])
+    return {
+        value: {
+            'color': dict_to_rgb(custom_color['color']),
+            'value': hexFromArgb(custom_color['value']),
+            'light': dict_to_rgb(custom_color['light']),
+            'dark': dict_to_rgb(custom_color['dark']),
+        } for custom_color in custom_colors
+    }
+
+
+def get_image(wallpaper):
+    img = Image.open(wallpaper)
+    # resize image proportionally
+    img = img.resize((64, int((float(img.size[1]) * float((64 / float(img.size[0])))))), Image.Resampling.LANCZOS)
+    # get best colors
+    source_colors = sourceColorsFromImage(img, top=False)
+    # close image file
+    img.close()
+    return source_colors[0]
+
+
+def assign_pallete(theme, best_colors, seedNo):
+    dark_scheme = json.loads(theme['schemes']['dark'].toJSON())
+    light_scheme = json.loads(theme['schemes']['light'].toJSON())
+    primary_palete = theme['palettes']['primary']
+    secondary_palete = theme['palettes']['secondary']
+    tertiary_palete = theme['palettes']['tertiary']
+    neutral_palete = theme['palettes']['neutral']
+    neutral_variant_palete = theme['palettes']['neutralVariant']
+    error_palette = theme['palettes']['error']
+    custom_colors = theme['customColors']
+
+    return {
+        'best': best_colors,
+        'seed': {
+            seedNo: hexFromArgb(theme['source']),
+        },
+        'schemes': {
+            'light': dict_to_rgb(light_scheme),
+            'dark': dict_to_rgb(dark_scheme),
+        },
+        'palettes': {
+            'primary': dict_to_rgb(tones_from_palette(primary_palete)),
+            'secondary': dict_to_rgb(tones_from_palette(secondary_palete)),
+            'tertiary': dict_to_rgb(tones_from_palette(tertiary_palete)),
+            'neutral': dict_to_rgb(tones_from_palette(neutral_palete)),
+            'neutralVariant': dict_to_rgb(tones_from_palette(neutral_variant_palete)),
+            'error': dict_to_rgb(tones_from_palette(error_palette)),
+        },
+        'custom': [
+            get_custom_colors(custom_colors)
+        ]
+    }
 
 
 def get_material_you_colors(wallpaper_data, ncolor, source_type):
-    """ Get material you colors from wallpaper or hex color using material-color-utility
-    Args:
-        wallpaper_data (tuple): wallpaper (type and data)
-        ncolor (int): Alternative color number flag passed to material-color-utility
-        source_type (str): image or color string passed to material-color-utility
-    Returns:
-        str: string data from python-material-color-utilities
+    """
+        Get material you colors from wallpaper or hex color using material-color-utility
+
+        Args:
+            wallpaper_data (tuple): wallpaper (type and data)
+            ncolor (int): Alternative color number flag passed to material-color-utility
+            source_type (str): image or color string passed to material-color-utility
+        Returns:
+            str: string data from python-material-color-utilities
     """
 
     try:
-        seedColor = 0
-        if source_type == "image":
-            # open image file
-            img = Image.open(wallpaper_data)
-            # resize image proportionally
-            basewidth = 64
-            wpercent = (basewidth/float(img.size[0]))
-            hsize = int((float(img.size[1])*float(wpercent)))
-            img = img.resize((basewidth, hsize), Image.Resampling.LANCZOS)
-            # get best colors
-            source_colors = sourceColorsFromImage(img, top=False)
-            # close image file
-            img.close()
-            seed_color = source_colors[0]
-        else:
-            seed_color = argbFromHex(wallpaper_data)
-            source_colors = [seed_color]
+        seed_color = get_image(wallpaper_data) if source_type == "image" else argbFromHex(wallpaper_data)
+        source_colors = [seed_color] if seed_color else 0
 
         # best colors
-        best_colors = {}
-        for i, color in enumerate(source_colors):
-            best_colors.update({str(i): hexFromArgb(color)})
+        best_colors = {str(i): hexFromArgb(color) for i, color in enumerate(source_colors)}
         # generate theme from seed color
         theme = themeFromSourceColor(seed_color)
-
         # Given a image, the alt color and hex color
         # return a selected color or a single color for hex code
         totalColors = len(best_colors)
-        if ncolor and ncolor != None:
-            ncolor = math_utils.clip(ncolor, 0, totalColors, 0)
-        else:
-            ncolor = 0
+        ncolor = 0 if not ncolor or ncolor is None else math_utils.clip(ncolor, 0, totalColors, 0)
+        seedColor = hexFromArgb(source_colors[ncolor]) if totalColors > ncolor else hexFromArgb(source_colors[-1])
+        seedNo = ncolor if totalColors > ncolor else seedNo = totalColors-1
 
-        if totalColors > ncolor:
-            seedColor = hexFromArgb(source_colors[ncolor])
-            seedNo = ncolor
-        else:
-            seedColor = hexFromArgb(source_colors[-1])
-            seedNo = totalColors-1
         if seedColor != 0:
             theme = themeFromSourceColor(argbFromHex(seedColor))
-
-        dark_scheme = json.loads(theme['schemes']['dark'].toJSON())
-        light_scheme = json.loads(theme['schemes']['light'].toJSON())
-        primary_palete = theme['palettes']['primary']
-        secondary_palete = theme['palettes']['secondary']
-        tertiary_palete = theme['palettes']['tertiary']
-        neutral_palete = theme['palettes']['neutral']
-        neutral_variant_palete = theme['palettes']['neutralVariant']
-        error_palette = theme['palettes']['error']
-        custom_colors = theme['customColors']
-
-        materialYouColors = {
-            'best': best_colors,
-            'seed': {
-                seedNo: hexFromArgb(theme['source']),
-            },
-            'schemes': {
-                'light': dict_to_rgb(light_scheme),
-                'dark': dict_to_rgb(dark_scheme),
-            },
-            'palettes': {
-                'primary': dict_to_rgb(tones_from_palette(primary_palete)),
-                'secondary': dict_to_rgb(tones_from_palette(secondary_palete)),
-                'tertiary': dict_to_rgb(tones_from_palette(tertiary_palete)),
-                'neutral': dict_to_rgb(tones_from_palette(neutral_palete)),
-                'neutralVariant': dict_to_rgb(tones_from_palette(neutral_variant_palete)),
-                'error': dict_to_rgb(tones_from_palette(error_palette)),
-            },
-            'custom': [
-                get_custom_colors(custom_colors)
-            ]
-        }
-        return materialYouColors
+            return assign_pallete(theme, best_colors, seedNo)
 
     except Exception as e:
         logging.error(
@@ -136,13 +117,14 @@ def get_material_you_colors(wallpaper_data, ncolor, source_type):
 
 
 def get_color_schemes(wallpaper, ncolor=None):
-    """ Display best colors, allow to select alternative color,
-    and make and apply color schemes for dark and light mode
-    Args:
-        wallpaper (tuple): wallpaper (type and data)
-        light (bool): wether use or not light scheme
-        ncolor (int): Alternative color number flag passed to material-color-utility
-    Returns:
+    """
+        Display best colors, allow to select alternative color,
+        and make and apply color schemes for dark and light mode
+
+        Args:
+            wallpaper (tuple): wallpaper (type and data)
+            light (bool): wether use or not light scheme
+            ncolor (int): Alternative color number flag passed to material-color-utility
     """
     if wallpaper != None:
         materialYouColors = None

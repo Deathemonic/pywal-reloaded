@@ -2,7 +2,7 @@
 import unittest
 import os
 
-from pywal import util
+from pywal import utils
 
 
 # Import colors.

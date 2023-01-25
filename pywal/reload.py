@@ -1,13 +1,14 @@
 """
-Reload programs.
+    Reload programs.
 """
 import logging
 import os
-import shutil
 import subprocess
 
+from shutil import which
+
 from .settings import CACHE_DIR, MODULE_DIR, OS
-from . import util
+from . import utils
 
 
 def tty(tty_reload):
@@ -24,7 +25,7 @@ def xrdb(xrdb_files=None):
     xrdb_files = xrdb_files or \
         [os.path.join(CACHE_DIR, "colors.Xresources")]
 
-    if shutil.which("xrdb") and OS != "Darwin":
+    if which("xrdb") and OS != "Darwin":
         for file in xrdb_files:
             subprocess.run(["xrdb", "-merge", "-quiet", file], check=False)
 
@@ -34,9 +35,9 @@ def gtk():
     # Here we call a Python 2 script to reload the GTK themes.
     # This is done because the Python 3 GTK/Gdk libraries don't
     # provide a way of doing this.
-    if shutil.which("python2"):
+    if which("python2"):
         gtk_reload = os.path.join(MODULE_DIR, "scripts", "gtk_reload.py")
-        util.disown(["python2", gtk_reload])
+        utils.disown(["python2", gtk_reload])
 
     else:
         logging.warning("GTK2 reload support requires Python 2.")
@@ -44,20 +45,20 @@ def gtk():
 
 def i3():
     """Reload i3 colors."""
-    if shutil.which("i3-msg") and util.get_pid("i3"):
-        util.disown(["i3-msg", "reload"])
+    if which("i3-msg") and utils.get_pid("i3"):
+        utils.disown(["i3-msg", "reload"])
 
 
 def bspwm():
-    """Reload bspwm colors."""
-    if shutil.which("bspc") and util.get_pid("bspwm"):
-        util.disown(["bspc", "wm", "-r"])
+    """ Reload bspwm colors."""
+    if which("bspc") and utils.get_pid("bspwm"):
+        utils.disown(["bspc", "wm", "-r"])
 
 
 def kitty():
     """ Reload kitty colors. """
-    if (shutil.which("kitty")
-            and util.get_pid("kitty")
+    if (which("kitty")
+            and utils.get_pid("kitty")
             and os.getenv('TERM') == 'xterm-kitty'):
         subprocess.call([
             "kitty", "@", "set-colors", "--all",
@@ -67,25 +68,19 @@ def kitty():
 
 def polybar():
     """Reload polybar colors."""
-    if shutil.which("polybar") and util.get_pid("polybar"):
-        util.disown(["pkill", "-USR1", "polybar"])
+    if which("polybar") and utils.get_pid("polybar"):
+        utils.disown(["pkill", "-USR1", "polybar"])
 
 
 def sway():
     """Reload sway colors."""
-    if shutil.which("swaymsg") and util.get_pid("sway"):
-        util.disown(["swaymsg", "reload"])
-
-
-def colors(cache_dir=CACHE_DIR):
-    """Reload colors. (Deprecated)"""
-    sequences = os.path.join(cache_dir, "sequences")
-
-    logging.error("'wal -r' is deprecated: "
-                  "Use 'cat %s' instead.", sequences)
-
-    if os.path.isfile(sequences):
-        print("".join(util.read_file(sequences)), end="")
+    if which("swaymsg") and utils.get_pid("sway"):
+        utils.disown(["swaymsg", "reload"])
+   
+        
+def script():
+    """Reload via script. (WIP)"""
+    pass
 
 
 def env(xrdb_file=None, tty_reload=True):
