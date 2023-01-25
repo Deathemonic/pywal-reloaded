@@ -25,23 +25,27 @@ class Color:
 
     @property
     def rgb(self):
-        """Convert a hex color to rgb."""
-        return "%s,%s,%s" % (*hex_to_rgb(self.hex_color),)
+        """ Convert a hex color to rgb. """
+        return f"{hex_to_rgb(self.hex_color)[0]}," \
+               f"{hex_to_rgb(self.hex_color)[1]}," \
+               f"{hex_to_rgb(self.hex_color)[2]}"
 
     @property
     def xrgba(self):
-        """Convert a hex color to xrdb rgba."""
+        """ Convert a hex color to xrdb rgba. """
         return hex_to_xrgba(self.hex_color)
 
     @property
     def rgba(self):
-        """Convert a hex color to rgba."""
-        return "rgba(%s,%s,%s,%s)" % (*hex_to_rgb(self.hex_color),
-                                      self.alpha_dec)
+        """ Convert a hex color to rgba. """
+        return f"rgba({hex_to_rgb(self.hex_color)[0]}," \
+               f"{hex_to_rgb(self.hex_color)[1]}," \
+               f"{hex_to_rgb(self.hex_color)[2]}," \
+               f"{self.alpha_dec})"
 
     @property
     def alpha(self):
-        """Add URxvt alpha value to color."""
+        """ Add URxvt alpha value to color. """
         return f"[{self.alpha_num}]{self.hex_color}"
 
     @property
@@ -56,41 +60,41 @@ class Color:
 
     @property
     def decimal_strip(self):
-        """Strip '#' from decimal color."""
+        """ Strip '#' from decimal color. """
         return int(self.hex_color[1:], 16)
 
     @property
     def octal(self):
-        """Export color in octal."""
+        """ Export color in octal. """
         return f"#{oct(int(self.hex_color[1:], 16))[2:]}"
 
     @property
     def octal_strip(self):
-        """Strip '#' from octal color."""
+        """ Strip '#' from octal color. """
         return oct(int(self.hex_color[1:], 16))[2:]
 
     @property
     def strip(self):
-        """Strip '#' from color."""
+        """ Strip '#' from color. """
         return self.hex_color[1:]
 
     @property
     def red(self):
-        """Red value as float between 0 and 1."""
-        return "%.3f" % (hex_to_rgb(self.hex_color)[0]/255.)
+        """ Red value as float between 0 and 1. """
+        return f"{hex_to_rgb(self.hex_color)[0]/255.:.3f}"
 
     @property
     def green(self):
-        """Green value as float between 0 and 1."""
-        return "%.3f" % (hex_to_rgb(self.hex_color)[1]/255.)
+        """ Green value as float between 0 and 1. """
+        return f"{hex_to_rgb(self.hex_color)[1]/255.:.3f}"
 
     @property
     def blue(self):
-        """Blue value as float between 0 and 1."""
-        return "%.3f" % (hex_to_rgb(self.hex_color)[2]/255.)
+        """ Blue value as float between 0 and 1. """
+        return f"{hex_to_rgb(self.hex_color)[3]/255.:.3f}"
 
     def lighten(self, percent):
-        """Lighten color by percent."""
+        """ Lighten color by percent. """
         percent = float(re.sub(r'[\D\.]', '', str(percent)))
         return Color(lighten_color(self.hex_color, percent / 100))
 
@@ -161,19 +165,19 @@ def setup_logging():
 
 
 def hex_to_rgb(color):
-    """Convert a hex color to rgb."""
+    """ Convert a hex color to rgb. """
     return tuple(bytes.fromhex(color.strip("#")))
 
 
 def hex_to_xrgba(color):
-    """Convert a hex color to xrdb rgba."""
+    """ Convert a hex color to xrdb rgba. """
     col = color.lower().strip("#")
-    return "%s%s/%s%s/%s%s/ff" % (*col,)
+    return f"{col[:2]}/{col[2:4]}/{col[4:6]}/ff"
 
 
 def rgb_to_hex(color):
-    """Convert an rgb color to hex."""
-    return "#%02x%02x%02x" % (*color,)
+    """ Convert a rgb color to hex. """
+    return f"#{color[0]:02x}{color[1]:02x}{color[2]:02x}"
 
 
 def darken_color(color, amount):
