@@ -10,7 +10,7 @@ except ImportError:
 
 LONG_DESC = open('README.md').read()
 VERSION = pywal.__version__
-DOWNLOAD = "https://github.com/dylanaraps/pywal/archive/%s.tar.gz" % VERSION
+DOWNLOAD = f"https://github.com/dylanaraps/pywal/archive/{VERSION}.tar.gz"
 
 setuptools.setup(
     name="pywal",

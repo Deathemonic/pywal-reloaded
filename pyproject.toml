@@ -26,3 +26,5 @@ classifiers = [
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
 ]
+[project.scripts]
+wal = "pywal.__main__:main"
