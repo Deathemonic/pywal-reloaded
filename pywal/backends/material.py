@@ -104,7 +104,7 @@ def get_material_you_colors(wallpaper_data, ncolor, source_type):
         totalColors = len(best_colors)
         ncolor = 0 if not ncolor or ncolor is None else math_utils.clip(ncolor, 0, totalColors, 0)
         seedColor = hexFromArgb(source_colors[ncolor]) if totalColors > ncolor else hexFromArgb(source_colors[-1])
-        seedNo = ncolor if totalColors > ncolor else seedNo = totalColors-1
+        seedNo = ncolor if totalColors > ncolor else seedNo = totalColors - 1
 
         if seedColor != 0:
             theme = themeFromSourceColor(argbFromHex(seedColor))
@@ -123,64 +123,69 @@ def get_color_schemes(wallpaper, ncolor=None):
 
         Args:
             wallpaper (tuple): wallpaper (type and data)
-            light (bool): wether use or not light scheme
             ncolor (int): Alternative color number flag passed to material-color-utility
     """
-    if wallpaper != None:
-        materialYouColors = None
+    if wallpaper is None:
+        logging.error(
+            f'''Error: Couldn't set schemes with "{wallpaper}"''')
+        return None
+
+    else:
+        material_you_colors = None
         wallpaper_type = wallpaper[0]
         wallpaper_data = wallpaper[1]
-        if wallpaper_type == "image":
+        if wallpaper_type == "color":
+            wallpaper_data = color_utils.color2hex(wallpaper_data)
+            source_type = "color"
+            material_you_colors = get_material_you_colors(
+                wallpaper_data, ncolor=ncolor, source_type=source_type)
+
+        elif wallpaper_type == "image":
             source_type = "image"
             if os.path.exists(wallpaper_data):
                 if not os.path.isdir(wallpaper_data):
                     # get colors from material-color-utility
-                    materialYouColors = get_material_you_colors(
+                    material_you_colors = get_material_you_colors(
                         wallpaper_data, ncolor=ncolor, source_type=source_type)
                 else:
                     logging.error(
                         f'"{wallpaper_data}" is a directory, aborting')
 
-        elif wallpaper_type == "color":
-            source_type = "color"
-            wallpaper_data = color_utils.color2hex(wallpaper_data)
-            materialYouColors = get_material_you_colors(
-                wallpaper_data, ncolor=ncolor, source_type=source_type)
-
-        if materialYouColors != None:
+        if material_you_colors is not None:
             try:
-                if len(materialYouColors['best']) > 1:
-                    best_colors = f'Best colors: {globals.TERM_STY_BOLD}'
-
-                    for index, col in materialYouColors['best'].items():
-                        if globals.USER_HAS_COLR:
-                            best_colors += f'{globals.TERM_COLOR_DEF+globals.TERM_STY_BOLD}{index}:{colr.color(col,fore=col)}'
-                        else:
-                            best_colors += f'{globals.TERM_COLOR_DEF+globals.TERM_STY_BOLD}{index}:{globals.TERM_COLOR_WHI}{col}'
-                        if int(index) < len(materialYouColors['best'])-1:
-                            best_colors = best_colors+","
-                    logging.info(best_colors)
-
-                seed = materialYouColors['seed']
-                sedColor = list(seed.values())[0]
-                seedNo = list(seed.keys())[0]
-                if globals.USER_HAS_COLR:
-                    logging.info(
-                        f'Using seed: {globals.TERM_COLOR_DEF+globals.TERM_STY_BOLD}{seedNo}:{colr.color(sedColor, fore=sedColor)}')
-                else:
-                    logging.info(
-                        f'Using seed: {globals.TERM_COLOR_DEF+globals.TERM_STY_BOLD}{seedNo}:{globals.TERM_COLOR_WHI}{sedColor}')
-
-                return materialYouColors
-
+                return fetch_colors(material_you_colors)
             except Exception as e:
                 logging.error(f'Error:\n{e}')
                 return None
 
+
+def fetch_colors(material_you_colors):
+    if len(material_you_colors['best']) > 1:
+        best_colors = f'Best colors: {globals.TERM_STY_BOLD}'
+
+        for index, col in material_you_colors['best'].items():
+            best_colors += (
+                f'{globals.TERM_COLOR_DEF + globals.TERM_STY_BOLD}{index}:{colr.color(col, fore=col)}'
+                if globals.USER_HAS_COLR
+                else f'{globals.TERM_COLOR_DEF + globals.TERM_STY_BOLD}{index}:{globals.TERM_COLOR_WHI}{col}'
+            )
+            if int(index) < len(material_you_colors['best']) - 1:
+                best_colors = f"{best_colors},"
+        logging.info(best_colors)
+
+    seed = material_you_colors['seed']
+    sedcolor = list(seed.values())[0]
+    seedno = list(seed.keys())[0]
+    if globals.USER_HAS_COLR:
+        logging.info(
+            f'Using seed: {globals.TERM_COLOR_DEF + globals.TERM_STY_BOLD}{seedno}:'
+            f'{colr.color(sedcolor, fore=sedcolor)}')
     else:
-        logging.error(
-            f'''Error: Couldn't set schemes with "{wallpaper_data}"''')
-        return None
+        logging.info(
+            f'Using seed: {globals.TERM_COLOR_DEF + globals.TERM_STY_BOLD}{seedno}:'
+            f'{globals.TERM_COLOR_WHI}{sedcolor}')
+
+    return material_you_colors
 
 
 def export_schemes(schemes):
