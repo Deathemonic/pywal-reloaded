@@ -6,17 +6,14 @@ build-backend = "setuptools.build_meta"
 name = "pywal-reloaded"
 description = "Generate and change color-schemes on the fly"
 authors = [
-    "Deathemonic <deathemonic@gmail.com>",
-    "Dylan Araps <dylan.araps@gmail.com>"
+    {name = "Deathemonic", email = "<deathemonic@gmail.com>"},
+    {name = "Dylan Araps", email = "dylan.araps@gmail.com"}
 ]
-maintainers = [
-    "Deathemonic <deathemonic@gmail.com>"
-]
+maintainers = [{name = "Deathemonic", email = "deathemonic@gmail.com"}]
 version = "3.3.3"
 readme = "README.md"
 requires-python = ">=3.5"
 license = {text = "MIT"}
-repository = "https://github.com/Deathemonic/pywal-reloaded"
 documentation = "https://github.com/Deathemonic/pywal-reloaded/wiki"
 keywords = ["wal", "colorscheme", "changing-colorschemes", "material"]
 classifiers = [
