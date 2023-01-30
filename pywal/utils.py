@@ -79,15 +79,12 @@ class Color:
         return f'{hex_to_rgb(self.hex_color)[3]/255.:.3f}'
     
     def darken(self, percent: int | float):
-        percent = int(percent * 100) if type(percent) is float else percent
         return Color(brighten_color(self.hex_color, percent, False))
     
     def lighten(self, percent: int | float):
-        percent = int(percent * 100) if type(percent) is float else percent
         return Color(brighten_color(self.hex_color, percent, True))
         
     def saturate(self, percent: int | float):
-        percent = int(percent * 100) if type(percent) is float else percent
         return Color(saturate_color(self.hex_color, percent))
 
 
@@ -110,12 +107,14 @@ def rgb_to_hex(color: tuple) -> str:
     return '#' + ''.join(f'{x:02x}' for x in color)
 
 
-def brighten_color(hex: str, amount: float, brighten: bool) -> str:
+def brighten_color(hex: str, amount: int | float, brighten: bool) -> str:
+    amount = int(amount * 100) if type(amount) is float else amount
     color = tuple(min(255, col + amount) if brighten else max(1, col - amount) for col in hex_to_rgb(hex))
     return rgb_to_hex(color)
 
 
-def saturate_color(color: str, amount: float) -> str:
+def saturate_color(color: str, amount: int | float) -> str:
+    amount = int(amount * 100) if type(amount) is float else amount
     r, g, b = hex_to_rgb(color)
     h, l, s = colorsys.rgb_to_hls(r/255, g/255, b/255)
     s = amount / 100
@@ -140,8 +139,7 @@ def setup_logging():
         logging.basicConfig(format='%(message)s', level=logging.INFO, datefmt='[%X]', handlers=[RichHandler(rich_tracebacks=True)])
         logging.getLogger('rich')
     except ImportError:
-        format = '[%(levelname)s\033[0m] \033[1;31m%(module)s\033[0m: %(message)s'
-        logging.basicConfig(format=format, level=logging.INFO, stream=stdout)
+        logging.basicConfig(format='[%(levelname)s\033[0m] \033[1;31m%(module)s\033[0m: %(message)s', level=logging.INFO, stream=stdout)
         logging.addLevelName(logging.ERROR, '\033[1;31mE')
         logging.addLevelName(logging.INFO, '\033[1;32mI')
         logging.addLevelName(logging.WARNING, '\033[1;33mW')
@@ -199,3 +197,4 @@ def get_pid(name: str) -> bool:
     except subprocess.CalledProcessError:
         return False
     return True
+    

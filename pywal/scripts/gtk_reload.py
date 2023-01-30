@@ -1,28 +1,17 @@
 #!/usr/bin/env python3
-"""
-    A script to reload GTK2 themes.
-
-    This uses Python2 since this requires 'send_clientmessage_toall()'
-    which isn't available in Python 3.
-
-    Original source: https://crunchbang.org/forums/viewtopic.php?id=39646
-"""
 
 try:
-    import gtk
+    import gi
+    gi.require_version('Gtk', '3.0')
+    from gi.repository import Gtk
 except ImportError:
-    print("[ERROR] gtk_reload: GTK reload requires PyGTK.")
+    print("[ERROR] gtk_reload: GTK reload requires PyGObject.")
     exit(1)
 
 
-def gtk_reload():
-    """Reload GTK2 themes."""
-    events = gtk.gdk.Event(gtk.gdk.CLIENT_EVENT)
-    data = gtk.gdk.atom_intern("_GTK_READ_RCFILES", False)
-    events.data_format = 8
-    events.send_event = True
-    events.message_type = data
-    events.send_clientmessage_toall()
+def main():
+    Gtk.rc_reparse_all()
 
 
-gtk_reload()
+if __name__ == "__main__":
+    main()
