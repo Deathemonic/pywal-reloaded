@@ -28,3 +28,5 @@ Terminal emulators and TTYs have their color-schemes updated in real-time with n
 ### Support the Original Developer:
 [![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Ddyla%26type%3Dpledges&style=for-the-badge)](https://patreon.com/dyla)
 [![Support me on PayPal](https://img.shields.io/badge/Donate-Paypal-3b7bbf?style=for-the-badge&logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7QNJNKS3WYVS)
+
+> **Note**: This is a **Work in progress** project so this never intended to be runned or used just yet. Use [pywal](https://github.com/dylanaraps/pywal) for the meantime.
