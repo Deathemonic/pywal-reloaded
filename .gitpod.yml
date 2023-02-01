@@ -1,11 +1,17 @@
-image: lopsided/archlinux-amd64:devel
+image:
+ file: .gitpod.Dockerfile
 
 additionalRepositories:
   - url: https://github.com/deathemonic/pywal-reloaded
-    checkoutLocation: rewrite
+    checkoutLocation: main
+  - url: https://github.com/dylanaraps/pywal
+    checkoutLocation: pywal
 
 tasks:
-  - name: rewrite
+  - name: main
     before: |
-      cd ../rewrite && pacman -S git
-      
+      cd ../main
+
+  - name: pywal
+    before: |
+      cd ../pywal
