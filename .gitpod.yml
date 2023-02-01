@@ -7,5 +7,5 @@ additionalRepositories:
 tasks:
   - name: rewrite
     before: |
-      cd ../rewrite
+      cd ../rewrite && pacman -S git
       
