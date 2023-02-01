@@ -1,0 +1,11 @@
+image: lopsided/archlinux-amd64:devel
+
+additionalRepositories:
+  - url: https://github.com/deathemonic/pywal-reloaded
+    checkoutLocation: rewrite
+
+tasks:
+  - name: rewrite
+    before: |
+      cd ../rewrite
+      
