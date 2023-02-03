@@ -12,4 +12,7 @@
             "path": "../pywal" // Additional repo
         },
     ],
+    "settings": {
+        "editor.fontFamily": "'JetBrainsMono Nerd Fonts'"
+    },
 }
