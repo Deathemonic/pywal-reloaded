@@ -1,17 +1,2 @@
 image:
  file: .gitpod.Dockerfile
-
-additionalRepositories:
-  - url: https://github.com/deathemonic/pywal-reloaded
-    checkoutLocation: main
-  - url: https://github.com/dylanaraps/pywal
-    checkoutLocation: pywal
-
-tasks:
-  - name: main
-    before: |
-      cd ../main
-
-  - name: pywal
-    before: |
-      cd ../pywal
