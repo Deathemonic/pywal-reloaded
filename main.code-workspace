@@ -6,7 +6,10 @@
             "path": "." // Main repo that you will open in Gitpod (e.g. frontend)
         },
         {
-            "path": "../rewrite" // Additional repo
+            "path": "../main" // Additional repo
+        },
+        {
+            "path": "../pywal" // Additional repo
         },
     ],
 }
