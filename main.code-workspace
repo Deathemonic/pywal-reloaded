@@ -13,6 +13,6 @@
         },
     ],
     "settings": {
-        "editor.fontFamily": "'JetBrainsMono Nerd Font'"
+        "editor.fontFamily": "'JetBrains Mono'"
     },
 }
