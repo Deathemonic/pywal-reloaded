@@ -4,6 +4,7 @@
 <p align="center">
 <a href="./LICENSE.md"><img src="https://img.shields.io/github/license/Deathemonic/pywal-reloaded?color=6eb5ff&logo=github&style=for-the-badge"></a>
 <a href="https://pypi.python.org/pypi/pywal/"><img src="https://img.shields.io/pypi/v/pywal?color=4584b6&logo=pypi&style=for-the-badge"></a>
+</p>
 
 Pywal is a tool that generates a color palette from the dominant colors in an image. It then applies the colors system-wide and on-the-fly in all of your favourite programs.
   
@@ -18,10 +19,10 @@ The goal of Pywal was to be as out of the way as possible. It doesn't modify any
 Terminal emulators and TTYs have their color-schemes updated in real-time with no delay. With minimal configuration this functionality can be extended to almost anything running on your system.
 
 ### More: 
-* [Installation](https://github.com/dylanaraps/pywal/wiki/Installation)
-* [Getting Started](https://github.com/dylanaraps/pywal/wiki/Getting-Started)
-* [Customization](https://github.com/dylanaraps/pywal/wiki/Customization)
-* [Wiki](https://github.com/dylanaraps/pywal/wiki)
+* [Installation](https://github.com/Deathemonic/pywal-reloaded/wiki/Installation)
+* [Getting Started](https://github.com/Deathemonic/pywal-reloaded/wiki/Getting-Started)
+* [Customization](https://github.com/Deathemonic/pywal-reloaded/wiki/Customization)
+* [Wiki](https://github.com/Deathemonic/pywal-reloaded/wiki)
 * [Screenshots](https://www.reddit.com/r/unixporn/search?q=wal&restrict_sr=on&sort=relevance&t=all)
 
 
