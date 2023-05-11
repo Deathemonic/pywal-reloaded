@@ -8,7 +8,7 @@ import re
 import sys
 
 from . import theme
-from . import util
+from . import utils
 from .settings import CACHE_DIR, MODULE_DIR, __cache_version__
 
 
@@ -18,20 +18,17 @@ def list_backends():
             os.scandir(os.path.join(MODULE_DIR, "backends"))
             if "__" not in b.name]
 
+
 def normalize_img_path(img: str):
     """Normalizes the image path for output."""
-    if os.name == 'nt':
-        # On Windows, the JSON.dump ends up outputting un-escaped backslash breaking
-        # the ability to read colors.json. Windows supports forward slash, so we can
-        # use that for now
-        return img.replace('\\', '/')
-    return img
+    return img.replace('\\', '/') if os.name == 'nt' else img
+
 
 def colors_to_dict(colors, img):
     """Convert list of colors to pywal format."""
     return {
         "wallpaper": normalize_img_path(img),
-        "alpha": util.Color.alpha_num,
+        "alpha": utils.Color.alpha_num,
 
         "special": {
             "background": colors[0],
@@ -61,22 +58,20 @@ def colors_to_dict(colors, img):
 
 
 def generic_adjust(colors, light):
-    """Generic color adjustment for themers."""
+    """Generic color adjustment for themes."""
     if light:
         for color in colors:
-            color = util.saturate_color(color, 0.60)
-            color = util.darken_color(color, 0.5)
+            color = utils.saturate_color(color, 0.60)
+            color = utils.darken_color(color, 0.5)
 
-        colors[0] = util.lighten_color(colors[0], 0.95)
-        colors[7] = util.darken_color(colors[0], 0.75)
-        colors[8] = util.darken_color(colors[0], 0.25)
-        colors[15] = colors[7]
-
+        colors[0] = utils.lighten_color(colors[0], 0.95)
+        colors[7] = utils.darken_color(colors[0], 0.75)
+        colors[8] = utils.darken_color(colors[0], 0.25)
     else:
-        colors[0] = util.darken_color(colors[0], 0.80)
-        colors[7] = util.lighten_color(colors[0], 0.75)
-        colors[8] = util.lighten_color(colors[0], 0.25)
-        colors[15] = colors[7]
+        colors[0] = utils.darken_color(colors[0], 0.80)
+        colors[7] = utils.lighten_color(colors[0], 0.75)
+        colors[8] = utils.lighten_color(colors[0], 0.25)
+    colors[15] = colors[7]
 
     return colors
 
@@ -86,12 +81,12 @@ def saturate_colors(colors, amount):
     if amount and float(amount) <= 1.0:
         for i, _ in enumerate(colors):
             if i not in [0, 7, 8, 15]:
-                colors[i] = util.saturate_color(colors[i], float(amount))
+                colors[i] = utils.saturate_color(colors[i], float(amount))
 
     return colors
 
 
-def cache_fname(img, backend, light, cache_dir, sat=""):
+def cache_frame(img, backend, light, cache_dir, sat=""):
     """Create the cache file name."""
     color_type = "light" if light else "dark"
     file_name = re.sub("[/|\\|.]", "_", img)
@@ -114,12 +109,12 @@ def get_backend(backend):
 
 def palette():
     """Generate a palette from the colors."""
-    for i in range(0, 16):
+    for i in range(16):
         if i % 8 == 0:
             print()
 
         if i > 7:
-            i = "8;5;%s" % i
+            i = f"8;5;{i}"
 
         print("\033[4%sm%s\033[0m" % (i, " " * (80 // 20)), end="")
 
@@ -129,12 +124,12 @@ def palette():
 def get(img, light=False, backend="wal", cache_dir=CACHE_DIR, sat=""):
     """Generate a palette."""
     # home_dylan_img_jpg_backend_1.2.2.json
-    cache_name = cache_fname(img, backend, light, cache_dir, sat)
+    cache_name = cache_frame(img, backend, light, cache_dir, sat)
     cache_file = os.path.join(*cache_name)
 
     if os.path.isfile(cache_file):
         colors = theme.file(cache_file)
-        colors["alpha"] = util.Color.alpha_num
+        colors["alpha"] = utils.Color.alpha_num
         logging.info("Found cached colorscheme.")
 
     else:
@@ -144,17 +139,17 @@ def get(img, light=False, backend="wal", cache_dir=CACHE_DIR, sat=""):
         # Dynamically import the backend we want to use.
         # This keeps the dependencies "optional".
         try:
-            __import__("pywal.backends.%s" % backend)
+            __import__(f"pywal.backends.{backend}")
         except ImportError:
             __import__("pywal.backends.wal")
             backend = "wal"
 
         logging.info("Using %s backend.", backend)
-        backend = sys.modules["pywal.backends.%s" % backend]
+        backend = sys.modules[f"pywal.backends.{backend}"]
         colors = getattr(backend, "get")(img, light)
         colors = colors_to_dict(saturate_colors(colors, sat), img)
 
-        util.save_file_json(colors, cache_file)
+        utils.save_file_json(colors, cache_file)
         logging.info("Generation complete.")
 
     return colors

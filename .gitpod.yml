@@ -1,0 +1,26 @@
+image: lopsided/archlinux-amd64:devel
+
+tasks:
+  - name: rewrite
+    before: |
+      # Get primary repo dir path and name
+      main_repo_dir="${GITPOD_REPO_ROOT}"
+      primary_repo_name="${main_repo_dir##*/}"
+
+      # Array for BRANCH name(s).
+      extra_clone_branches=(
+          rewrite
+      )
+
+      for reference in "${extra_clone_branches[@]}"; do {
+          dir="${main_repo_dir}-${reference}"
+
+          if test ! -e "${dir}" && git -C "${main_repo_dir}" show-ref --quiet "refs/heads/${reference}"; then {
+            printf 'INFO: %s\n' "Duplicating ${primary_repo_name} to ${dir} with ${reference} branch"
+            cp -ra "${main_repo_dir}" "${dir}"
+            git -C "${dir}" checkout "${reference}" 2>&1 | grep -v "Switched to branch '${reference}'"
+          } fi
+      } done
+
+      # Send signal to awaiting task(s)
+      gp sync-done multi_branch

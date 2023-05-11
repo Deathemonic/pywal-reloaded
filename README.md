@@ -6,9 +6,9 @@
 <a href="https://pypi.python.org/pypi/pywal/"><img src="https://img.shields.io/pypi/v/pywal?color=4584b6&logo=pypi&style=for-the-badge"></a>
 </p>
 
-<img src="https://i.imgur.com/HhK3LDv.jpg" alt="img" align="right" width="400px">
-
-Pywal is a tool that generates a color palette from the dominant colors in an image. It then applies the colors system-wide and on-the-fly in all of your favourite programs.  
+Pywal is a tool that generates a color palette from the dominant colors in an image. It then applies the colors system-wide and on-the-fly in all of your favourite programs.
+  
+<img src="https://i.imgur.com/HhK3LDv.jpg" alt="img" align="right" width="300px">
 
 There are currently 5 supported color generation backends, each providing a different palette of colors from each image. You're bound to find an appealing color-scheme.
 
@@ -29,3 +29,5 @@ Terminal emulators and TTYs have their color-schemes updated in real-time with n
 ### Support the Original Developer:
 [![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Ddyla%26type%3Dpledges&style=for-the-badge)](https://patreon.com/dyla)
 [![Support me on PayPal](https://img.shields.io/badge/Donate-Paypal-3b7bbf?style=for-the-badge&logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7QNJNKS3WYVS)
+
+> **Note**: This is a **Work in progress** project so this never intended to be runned or used just yet. Use [pywal](https://github.com/dylanaraps/pywal) for the meantime.

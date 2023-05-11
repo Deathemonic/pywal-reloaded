@@ -1,12 +1,16 @@
 """
+
                                       '||
-... ...  .... ... ... ... ...  ....    ||
- ||'  ||  '|.  |   ||  ||  |  '' .||   ||
- ||    |   '|.|     ||| |||   .|' ||   ||
- ||...'     '|       |   |    '|..'|' .||.
- ||      .. |
-''''      ''
-Created by Dylan Araps.
+    ... ...  .... ... ... ... ...  ....    ||
+    ||'  ||  '|.  |   ||  ||  |  '' .||   ||
+    ||    |   '|.|     ||| |||   .|' ||   ||
+    ||...'     '|       |   |    '|..'|' .||.
+    ||      .. |
+    ''''      ''
+
+    Created by Dylan Araps.
+    Improved by Deathemonic.
+
 """
 
 import argparse
@@ -22,18 +26,16 @@ from . import image
 from . import reload
 from . import sequences
 from . import theme
-from . import util
+from . import utils
 from . import wallpaper
 
 
 def get_args():
     """Get the script arguments."""
-    description = "wal - Generate colorschemes on the fly"
-    arg = argparse.ArgumentParser(description=description)
+    arg = argparse.ArgumentParser(description="wal - Generate colorschemes on the fly")
 
-    arg.add_argument("-a", metavar="\"alpha\"",
-                     help="Set terminal background transparency. \
-                           *Only works in URxvt*")
+    arg.add_argument("-a", action="store",
+                     help="Set a autoreload script (WIP)")
 
     arg.add_argument("-b", metavar="background",
                      help="Custom background color to use.")
@@ -67,6 +69,9 @@ def get_args():
     arg.add_argument("--vte", action="store_true",
                      help="Fix text-artifacts printed in VTE terminals.")
 
+    arg.add_argument("-g", action="store",
+                     help="Set how many colors will it generate - Default: 15 (WIP)")
+
     arg.add_argument("-c", action="store_true",
                      help="Delete all cached colorschemes.")
 
@@ -89,10 +94,6 @@ def get_args():
 
     arg.add_argument("-q", action="store_true",
                      help="Quiet mode, don\'t print anything.")
-
-    arg.add_argument("-r", action="store_true",
-                     help="'wal -r' is deprecated: Use \
-                           (cat ~/.cache/wal/sequences &) instead.")
 
     arg.add_argument("-R", action="store_true",
                      help="Restore previous colorscheme.")
@@ -134,10 +135,6 @@ def parse_args_exit(parser):
     if args.i and args.theme:
         parser.error("Conflicting arguments -i and -f.")
 
-    if args.r:
-        reload.colors()
-        sys.exit(0)
-
     if args.c:
         scheme_dir = os.path.join(CACHE_DIR, "schemes")
         shutil.rmtree(scheme_dir, ignore_errors=True)
@@ -169,9 +166,6 @@ def parse_args(parser):
         logging.getLogger().disabled = True
         sys.stdout = sys.stderr = open(os.devnull, "w")
 
-    if args.a:
-        util.Color.alpha_num = args.a
-
     if args.i:
         image_file = image.get(args.i, iterative=args.iterative,
                                recursive=args.recursive)
@@ -185,7 +179,7 @@ def parse_args(parser):
         colors_plain = theme.file(os.path.join(CACHE_DIR, "colors.json"))
 
     if args.w:
-        cached_wallpaper = util.read_file(os.path.join(CACHE_DIR, "wal"))
+        cached_wallpaper = utils.read_file(os.path.join(CACHE_DIR, "wal"))
         colors_plain = colors.get(cached_wallpaper[0], args.l, args.backend,
                                   sat=args.saturate)
 
@@ -212,7 +206,7 @@ def parse_args(parser):
 
     if args.o:
         for cmd in args.o:
-            util.disown([cmd])
+            utils.disown([cmd])
 
     if not args.e:
         reload.gtk()
@@ -220,11 +214,11 @@ def parse_args(parser):
 
 def main():
     """Main script function."""
-    util.create_dir(os.path.join(CONF_DIR, "templates"))
-    util.create_dir(os.path.join(CONF_DIR, "colorschemes/light/"))
-    util.create_dir(os.path.join(CONF_DIR, "colorschemes/dark/"))
+    utils.create_dir(os.path.join(CONF_DIR, "templates"))
+    utils.create_dir(os.path.join(CONF_DIR, "colorschemes/light/"))
+    utils.create_dir(os.path.join(CONF_DIR, "colorschemes/dark/"))
 
-    util.setup_logging()
+    utils.setup_logging()
     parser = get_args()
 
     parse_args_exit(parser)

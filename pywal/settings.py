@@ -1,19 +1,12 @@
 """
-                                      '||
-... ...  .... ... ... ... ...  ....    ||
- ||'  ||  '|.  |   ||  ||  |  '' .||   ||
- ||    |   '|.|     ||| |||   .|' ||   ||
- ||...'     '|       |   |    '|..'|' .||.
- ||      .. |
-''''      ''
-Created by Dylan Araps.
+The settings of pywal.
 """
 
 import os
 import platform
 
 
-__version__ = "3.3.1"
+__version__ = "4.0.0"
 __cache_version__ = "1.1.0"
 
 

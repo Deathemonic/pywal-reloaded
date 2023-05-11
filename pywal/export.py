@@ -5,7 +5,7 @@ import logging
 import os
 import re
 
-from . import util
+from . import utils
 from .settings import CACHE_DIR, CONF_DIR, MODULE_DIR
 
 
@@ -13,7 +13,7 @@ def template(colors, input_file, output_file=None):
     """Read template file, substitute markers and
        save the file elsewhere."""
     # pylint: disable-msg=too-many-locals
-    template_data = util.read_file_raw(input_file)
+    template_data = utils.read_file_raw(input_file)
     for i, l in enumerate(template_data):
         for match in re.finditer(r"(?<=(?<!\{))(\{([^{}]+)\})(?=(?!\}))", l):
             # Get the color, and the functions associated with it
@@ -24,7 +24,7 @@ def template(colors, input_file, output_file=None):
             # Build up a string which will be replaced with the new color
             replace_str = cname
             # Color to be modified copied into new one
-            new_color = util.Color(colors[cname].hex_color)
+            new_color = utils.Color(colors[cname].hex_color)
             # Execute each function to be done
             for func in filter(None, re.split(r"\)|\.", funcs)):
                 # Get function name and arguments
@@ -40,20 +40,17 @@ def template(colors, input_file, output_file=None):
 
                 # If the function is callable, call it
                 if callable(function):
-                    if len(func) > 1:
-                        new_color = function(*func[1].split(","))
-                    else:
-                        new_color = function()
+                    new_color = function(*func[1].split(",")) if len(func) > 1 else function()
                     # string to replace generated colors
                     if func[0] != '.':
                         replace_str += "."
                     replace_str += "(".join(func) + ")"
                 else:
                     # if it is an attribute i.e. rgb
-                    replace_str += '.' + fname
+                    replace_str += f'.{fname}'
                     new_color = function
 
-            if isinstance(new_color, util.Color):
+            if isinstance(new_color, utils.Color):
                 new_color = new_color.strip
             # If the color was changed, replace with a unique identifier.
             if new_color is not colors[cname]:
@@ -61,9 +58,8 @@ def template(colors, input_file, output_file=None):
                 new_color_clean = (new_color.replace('[', '_')
                                             .replace(']', '_')
                                             .replace('.', '_'))
-                template_data[i] = l.replace(replace_str,
-                                             "color" + new_color_clean)
-                colors["color" + new_color_clean] = new_color
+                template_data[i] = l.replace(replace_str, f"color{new_color_clean}")
+                colors[f"color{new_color_clean}"] = new_color
     try:
         template_data = "".join(template_data).format(**colors)
     except (ValueError, KeyError, AttributeError) as exc:
@@ -71,17 +67,17 @@ def template(colors, input_file, output_file=None):
             "Syntax error in template file '%s': %r.",
             input_file, exc)
         return
-    util.save_file(template_data, output_file)
+    utils.save_file(template_data, output_file)
 
 
 def flatten_colors(colors):
     """Prepare colors to be exported.
-       Flatten dicts and convert colors to util.Color()"""
+       Flatten dicts and convert colors to utils.Color()"""
     all_colors = {"wallpaper": colors["wallpaper"],
                   "alpha": colors["alpha"],
                   **colors["special"],
                   **colors["colors"]}
-    return {k: util.Color(v) for k, v in all_colors.items()}
+    return {k: utils.Color(v) for k, v in all_colors.items()}
 
 
 def get_export_type(export_type):
@@ -118,7 +114,7 @@ def every(colors, output_dir=CACHE_DIR):
     colors = flatten_colors(colors)
     template_dir = os.path.join(MODULE_DIR, "templates")
     template_dir_user = os.path.join(CONF_DIR, "templates")
-    util.create_dir(template_dir_user)
+    utils.create_dir(template_dir_user)
 
     join = os.path.join  # Minor optimization.
     for file in [*os.scandir(template_dir),
