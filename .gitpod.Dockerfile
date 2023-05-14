@@ -1,9 +1,5 @@
 ARG ARCH=amd64
-FROM samip537/archlinux:$ARCH
-
-RUN pacman -Sy --noconfirm --needed base-devel
-
-RUN rm /var/lib/pacman/sync/*
+FROM lopsided/archlinux:devel
 
 RUN pacman -Sy go git --noconfirm
 
