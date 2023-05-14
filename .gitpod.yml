@@ -1,1 +1,2 @@
-image: samip537/archlinux:amd64-yay
+image:
+  file: .gitpod.Dockerfile
